@@ -54,6 +54,14 @@
       ]
     },
     {
+      "name": "selected",
+      "init": {},
+      "streams": [
+        {"type": "@label:mousedown", "expr": "datum"},
+        {"type": "window:mouseup", "expr": "{}"}
+      ]
+    },
+    {
       "name": "dest",
       "init": {},
       "streams": [
@@ -61,8 +69,16 @@
         {"type": "@label:mouseout", "expr": "{}"}
       ]
     },
+    {"name": "srcOrder", "expr": "src.order"},
     {"name": "destOrder", "expr": "dest.order"},
-    {"name": "dragging",  "expr": "src._id && dest._id"}
+    {"name": "dragging",  "expr": "src._id && dest._id"},
+    {
+      "name": "dragStarts",
+      "init": {},
+      "streams": [
+        {"type": "window:mousemove[selected]", "expr": "datum"}
+      ]
+    }
   ],
 
   "predicates": [

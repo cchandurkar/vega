@@ -15,6 +15,34 @@
         // Create Chart
         var matrixChart = chart({el:"#chart"}).update();
 
+        // Logs
+        console.log("chart", matrixChart);
+        console.log("signals", matrixChart.signal());
+        // Object.keys(matrixChart.signal()).forEach(function(signal){
+        // matrixChart.onSignal("dragging", function(signal, value){
+        //   console.log(signal, value);
+        // });
+        //
+        // matrixChart.onSignal("dest", function(signal, value){
+        //   console.log(signal, value);
+        // });
+        //
+        // matrixChart.onSignal("destOrder", function(signal, value){
+        //   console.log(signal, value);
+        // });
+        //
+        // matrixChart.onSignal("src", function(signal, value){
+        //   console.log(signal, value);
+        // });
+        //
+        matrixChart.onSignal("dragStarts", function(signal, value){
+          console.log(signal, value);
+        });
+
+
+
+        // });
+
       });
     }
     parse("./specs/reorderMatrix.json");
