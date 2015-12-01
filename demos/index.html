@@ -5,43 +5,115 @@
     <title>Vega Demos</title>
     <script type="text/javascript" src="../d3.min.js"></script>
     <script type="text/javascript" src="../vega.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script type="text/javascript" src="http://cchandurkar.github.io/trails/trails.min.js"></script>
+    <link rel="stylesheet" href="http://cchandurkar.github.io/trails/trails.css" media="screen" charset="utf-8">
   </head>
   <body>
     <div id="chart"></div>
+    <div id="controls"></div>
     <script type="text/javascript">
     function parse(spec) {
       vg.parse.spec(spec, function(chart) {
 
         // Create Chart
         var matrixChart = chart({el:"#chart"}).update();
+        Object.keys(matrixChart.signal()).forEach(function(signal){
+          matrixChart.onSignal(signal, function(name, value){
+            console.log(name, value);
+          });
+        });
+
+        // Create trail
+        var trail = trails.create()
+          .attr('viz', 'matrix-reorder')
+          .attr('exampleId', '34')
+          .addControls()
+          .renderTo("#controls");
+
+        // Listen to load events
+        trail.listen('onSnapshotChanged', function(signalData){
+
+            // Add Signals
+            // matrixChart.signal("src", signalData.src)
+            //   .signal("dest", signalData.dest)
+            //   .signal("destOrder", signalData.dest.index)
+            //   .signal("dragging", signalData.dest._id)
+            //   .signal("destOrder", undefined)
+            //   .signal("dragging", undefined)
+            //   .signal("dest", signalData.src)
+            //   .signal("destOrder", signalData.dest.index)
+            //   .signal("dragging", signalData.src._id)
+            //   .signal("src", {})
+            //   .signal("dest", {})
+            //   .signal("destOrder", undefined)
+            //   .signal("dragging", undefined)
+            //   .update();
+
+            matrixChart
+              .signal("src", signalData.dest)
+              .signal("dest", signalData.dest)
+              .update();
+
+              matrixChart
+                .signal("src", signalData.src)
+                .signal("dest", signalData.src)
+                .update();
+
+              // matrixChartx
+              // .update();
+
+            matrixChart
+              .signal("src", {})
+              .signal("dest", {})
+              .update();
+
+
+        });
 
         // Logs
         console.log("chart", matrixChart);
         console.log("signals", matrixChart.signal());
-        // Object.keys(matrixChart.signal()).forEach(function(signal){
-        // matrixChart.onSignal("dragging", function(signal, value){
-        //   console.log(signal, value);
-        // });
-        //
-        // matrixChart.onSignal("dest", function(signal, value){
-        //   console.log(signal, value);
-        // });
-        //
-        // matrixChart.onSignal("destOrder", function(signal, value){
-        //   console.log(signal, value);
-        // });
-        //
-        // matrixChart.onSignal("src", function(signal, value){
-        //   console.log(signal, value);
-        // });
-        //
-        matrixChart.onSignal("dragStarts", function(signal, value){
-          console.log(signal, value);
+
+        // Hold src and dest data
+        var data = {
+          srcId: -1, srcOrder: -1,
+          destId: -1, destOrder: -1
+        };
+
+        var signalData = {
+          src: null,
+          dest: null
+        };
+
+        matrixChart.onSignal("src", function(signal, value){
+          console.log(signal + "onSignal", value);
+          if(value._id){
+            data.srcId = value._id;
+            data.srcOrder = value.order;
+            signalData.src = value;
+          } else {
+            if(data.srcId != -1 && data.destId != -1){
+              trail.captureWithImage(signalData, matrixChart.toImageURL());
+              data.srcId= -1;
+              data.srcOrder = -1;
+              data.destId = -1;
+              data.destOrder = -1;
+              signalData.src = null;
+              signalData.dest = null;
+            }
+          }
         });
 
+        matrixChart.onSignal("dest", function(signal, value){
+          // console.log(signal, value);
+          if(value._id){
+            data.destId = value._id;
+            data.destOrder = value.order;
+            signalData.dest = value;
+          }
+        });
 
-
-        // });
 
       });
     }
