@@ -61,24 +61,19 @@
         // Check if it is mousedown and set src data
         matrixChart.onSignal("src", function(signal, value){
 
-          if(value._id && !signalData.src){
-            signalData.src = (JSON.parse(JSON.stringify(value)));
-            console.log("src", (JSON.parse(JSON.stringify(value))));
+          if(value._id){
+            signalData.src = value;
           } else {
             if(signalData.src && signalData.dest && signalData.src._id && signalData.dest._id){
 
               // Cloned to avoid Hot-referencing
               var clonedSignalData = (JSON.parse(JSON.stringify(signalData)));
 
-                console.log("before swap Clonned", (JSON.parse(JSON.stringify(clonedSignalData))));
-
               // Swap `order` in src and dest since it is updated by signal internally
               // Swapping is done in `clonedSignalData` and not in `signalData` to avoid Hot-Referencing
-              // var temp = clonedSignalData.src.order;
-              // clonedSignalData.src.order = clonedSignalData.dest.order;
-              // clonedSignalData.dest.order = temp;
-
-              console.log("after swap Clonned", (JSON.parse(JSON.stringify(clonedSignalData))));
+              var temp = clonedSignalData.src.order;
+              clonedSignalData.src.order = clonedSignalData.dest.order;
+              clonedSignalData.dest.order = temp;
 
               // Capture
               trail.captureWithImage(clonedSignalData, matrixChart.toImageURL());
@@ -94,9 +89,8 @@
         // Every time dest signal changed (on hovering over labels)
         // Check if it is dragging some label (check src is set) if set keep updating dest
         matrixChart.onSignal("dest", function(signal, value){
-          if(value._id && signalData.src && signalData.src._id != value._id){
-            console.log("dest", (JSON.parse(JSON.stringify(value))));
-            signalData.dest = (JSON.parse(JSON.stringify(value)));
+          if(value._id && signalData.src._id && signalData.src._id != value._id){
+            signalData.dest = value;
           }
         });
 
