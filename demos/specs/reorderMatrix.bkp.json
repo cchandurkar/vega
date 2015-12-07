@@ -14,19 +14,14 @@
           "expr": "datum.order == null ? datum.index : datum.order"
         },
         {
-          "type" : "formula",
-          "field": "swappedFrom",
-          "expr": "if(dragging && src._id && dest._id, if(src.order - dest.order > 1 || src.order - dest.order < -1, [src.order, dest.order], -1), -1)"
+          "type": "formula",
+          "field": "order",
+          "expr": "if(dragging && datum._id === dest._id, src.order, datum.order)"
         },
         {
           "type": "formula",
           "field": "order",
-          "expr": "if(datum.swappedFrom != -1, if(datum.swappedFrom[0] < datum.swappedFrom[1], if(datum.order > datum.swappedFrom[0] &&  datum.order < datum.swappedFrom[1], datum.order -1 , datum.order), if(datum.order < datum.swappedFrom[0] &&  datum.order > datum.swappedFrom[1], datum.order+1 , datum.order)) , if(dragging && datum._id === dest._id, src.order, datum.order))"
-        },
-        {
-          "type": "formula",
-          "field": "order",
-          "expr": "if(datum.swappedFrom != -1, if(dragging && datum._id === src._id, destOrder, if(datum.swappedFrom != 1, if(datum.swappedFrom[0] < datum.swappedFrom[1], datum.order +1, datum.order -1), datum.order)), if(dragging && datum._id === src._id, destOrder, datum.order))"
+          "expr": "if(dragging && datum._id === src._id, destOrder, datum.order)"
         }
       ]
     },

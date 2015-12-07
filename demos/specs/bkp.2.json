@@ -21,12 +21,12 @@
         {
           "type": "formula",
           "field": "order",
-          "expr": "if(datum.swappedFrom != -1, if(datum.swappedFrom[0] < datum.swappedFrom[1], if(datum.order > datum.swappedFrom[0] &&  datum.order < datum.swappedFrom[1], datum.order -1 , datum.order), if(datum.order < datum.swappedFrom[0] &&  datum.order > datum.swappedFrom[1], datum.order+1 , datum.order)) , if(dragging && datum._id === dest._id, src.order, datum.order))"
+          "expr": "if(dragging, if(datum.swappedFrom != -1, if(datum.swappedFrom[0] < datum.swappedFrom[1], if(datum._id > datum.swappedFrom[0] && datum._id < datum.swappedFrom[1], datum.order - 1 , datum.order + 1) ,  if(datum._id < datum.swappedFrom[0] && datum._id < datum.swappedFrom[1], datum.order + 1 , datum.order - 1)), if(datum._id === dest._id, src.order, datum.order)), datum.order)"
         },
         {
           "type": "formula",
           "field": "order",
-          "expr": "if(datum.swappedFrom != -1, if(dragging && datum._id === src._id, destOrder, if(datum.swappedFrom != 1, if(datum.swappedFrom[0] < datum.swappedFrom[1], datum.order +1, datum.order -1), datum.order)), if(dragging && datum._id === src._id, destOrder, datum.order))"
+          "expr": "if(dragging, if(datum.swappedFrom != -1, if(datum.swappedFrom[0] < datum.swappedFrom[1], if(datum._id > datum.swappedFrom[0] && datum._id < datum.swappedFrom[1], datum.order - 1 , datum.order + 1) ,  if(datum._id < datum.swappedFrom[0] && datum._id < datum.swappedFrom[1], datum.order + 1 , datum.order - 1)), if(datum._id === src._id, destOrder, datum.order)), datum.order)"
         }
       ]
     },
