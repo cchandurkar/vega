@@ -14,14 +14,38 @@
           "expr": "datum.order == null ? datum.index : datum.order"
         },
         {
+<<<<<<< HEAD
+          "type" : "formula",
+          "field": "swappedFrom",
+          "expr": "if(dragging && src._id && dest._id, if(src.order - dest.order > 1 || src.order - dest.order < -1, {src: {id: src._id, order: src.order}, dest: {id:dest._id, order:dest.order} }, -1), -1)"
+=======
           "type": "formula",
           "field": "order",
-          "expr": "if(dragging && datum._id === dest._id, src.order, datum.order)"
+          "expr": "if(dragging && src.order < dest.order, if(datum.order > src.order && datum.order < dest.order, datum.order - 1, datum.order), datum.order)"
         },
         {
           "type": "formula",
           "field": "order",
+          "expr": "if(dragging && src.order > dest.order, if(datum.order < src.order && datum.order > dest.order, datum.order + 1, datum.order), datum.order)"
+>>>>>>> 8f65b96deff59607e9313f434f440ee2a9f15a24
+        },
+        {
+          "type": "formula",
+          "field": "order",
+<<<<<<< HEAD
+          "expr": "if(datum.swappedFrom != -1, if(datum.swappedFrom.src.order < datum.swappedFrom.dest.order, if(datum.order > datum.swappedFrom.src.order &&  datum.order < datum.swappedFrom.dest.order, datum.order -1 , datum.order), if(datum.order < datum.swappedFrom.src.order &&  datum.order > datum.swappedFrom.dest.order, datum.order+1 , datum.order)) , if(dragging && datum._id === dest._id, src.order, datum.order))"
+=======
+          "expr": "if(dragging && datum._id === dest._id, if(src.order < dest.order, dest.order - 1, dest.order + 1), datum.order)"
+>>>>>>> 8f65b96deff59607e9313f434f440ee2a9f15a24
+        },
+        {
+          "type": "formula",
+          "field": "order",
+<<<<<<< HEAD
+          "expr": "if(datum.swappedFrom != -1, if(datum._id === src._id, destOrder, if(datum.swappedFrom != 1, if(datum.swappedFrom.src.order < datum.swappedFrom.dest.order, datum.order +1, datum.order -1), datum.order)), if(dragging && datum._id === src._id, destOrder, datum.order))"
+=======
           "expr": "if(dragging && datum._id === src._id, destOrder, datum.order)"
+>>>>>>> 8f65b96deff59607e9313f434f440ee2a9f15a24
         }
       ]
     },
