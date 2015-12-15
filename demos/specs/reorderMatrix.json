@@ -32,6 +32,11 @@
           "type": "formula",
           "field": "order",
           "expr": "if(dragging && datum._id === src._id, destOrder, datum.order)"
+        },
+        {
+          "type": "formula",
+          "field": "order",
+          "expr": "if(fixOrder != null, fixOrder[datum._id], datum.order)"
         }
       ]
     },
@@ -72,7 +77,11 @@
       ]
     },
     {"name": "destOrder", "expr": "dest.order"},
-    {"name": "dragging",  "expr": "src._id && dest._id"}
+    {"name": "dragging",  "expr": "src._id && dest._id"},
+    {
+      "name": "fixOrder",
+      "init": null
+    }
   ],
 
   "predicates": [

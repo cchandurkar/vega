@@ -18,11 +18,6 @@
 
         // Create Chart
         var matrixChart = chart({el:"#chart"}).update();
-        // Object.keys(matrixChart.signal()).forEach(function(signal){
-        //   matrixChart.onSignal(signal, function(name, value){
-        //     console.log(name, value);
-        //   });
-        // });
 
         // Create trail
         var trail = trails.create()
@@ -33,70 +28,31 @@
 
         // Listen to load events
         trail.listen('onSnapshotChanged', function(signalData){
-
-          // Update Signals
-          matrixChart
-            .signal("src", signalData.src)
-            .signal("dest", signalData.dest)
-            .update();
-
-          // Update src and dest to
-          matrixChart
-            .signal("src", {})
-            .signal("dest", {})
-            .signal("destOrder", undefined)
-            .signal("dragging", undefined)
-            .update();
-
+          matrixChart.signal("fixOrder", signalData).update();
+          matrixChart.signal("fixOrder", null).update();
         });
-
-
-        // hold signal data
-        var signalData = {
-          src: null,
-          dest: null
-        };
 
         // Every time src signal changed (mousedown or mouseup)
         // Check if it is mousedown and set src data
+        var firstSrc = null;
         matrixChart.onSignal("src", function(signal, value){
+          if(value._id){
+            firstSrc = value;
+          }else if(!value._id && firstSrc){
+            console.log("src");
 
-          if(value._id && !signalData.src){
-            signalData.src = (JSON.parse(JSON.stringify(value)));
-            console.log("src", (JSON.parse(JSON.stringify(value))));
-          } else {
-            if(signalData.src && signalData.dest && signalData.src._id && signalData.dest._id){
+            // Parse all datum's id and order
+            var data = {};
+            matrixChart.data().nodes.forEach(function(datum){
+              data[datum._id] = datum.order;
+            });
 
-              // Cloned to avoid Hot-referencing
-              var clonedSignalData = (JSON.parse(JSON.stringify(signalData)));
+            // Capture
+            trail.captureWithImage(data, matrixChart.toImageURL());
 
-                console.log("before swap Clonned", (JSON.parse(JSON.stringify(clonedSignalData))));
+            // Reset src
+            firstSrc = null;
 
-              // Swap `order` in src and dest since it is updated by signal internally
-              // Swapping is done in `clonedSignalData` and not in `signalData` to avoid Hot-Referencing
-              // var temp = clonedSignalData.src.order;
-              // clonedSignalData.src.order = clonedSignalData.dest.order;
-              // clonedSignalData.dest.order = temp;
-
-              console.log("after swap Clonned", (JSON.parse(JSON.stringify(clonedSignalData))));
-
-              // Capture
-              trail.captureWithImage(clonedSignalData, matrixChart.toImageURL());
-
-              // Reset Data
-              signalData.src = null;
-              signalData.dest = null;
-
-            }
-          }
-        });
-
-        // Every time dest signal changed (on hovering over labels)
-        // Check if it is dragging some label (check src is set) if set keep updating dest
-        matrixChart.onSignal("dest", function(signal, value){
-          if(value._id && signalData.src && signalData.src._id != value._id){
-            console.log("dest", (JSON.parse(JSON.stringify(value))));
-            signalData.dest = (JSON.parse(JSON.stringify(value)));
           }
         });
 
