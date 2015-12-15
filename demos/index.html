@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <title>Vega Demos</title>
-    <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
-    <script type="text/javascript" src="http://vega.github.io/vega/vega.min.js"></script>
+    <script type="text/javascript" src="../d3.min.js"></script>
+    <script type="text/javascript" src="../vega.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script type="text/javascript" src="http://cchandurkar.github.io/trails/trails.min.js"></script>
     <link rel="stylesheet" href="http://cchandurkar.github.io/trails/trails.css" media="screen" charset="utf-8">
@@ -18,6 +18,11 @@
 
         // Create Chart
         var matrixChart = chart({el:"#chart"}).update();
+        // Object.keys(matrixChart.signal()).forEach(function(signal){
+        //   matrixChart.onSignal(signal, function(name, value){
+        //     console.log(name, value);
+        //   });
+        // });
 
         // Create trail
         var trail = trails.create()
@@ -64,6 +69,16 @@
 
               // Cloned to avoid Hot-referencing
               var clonedSignalData = (JSON.parse(JSON.stringify(signalData)));
+
+                console.log("before swap Clonned", (JSON.parse(JSON.stringify(clonedSignalData))));
+
+              // Swap `order` in src and dest since it is updated by signal internally
+              // Swapping is done in `clonedSignalData` and not in `signalData` to avoid Hot-Referencing
+              // var temp = clonedSignalData.src.order;
+              // clonedSignalData.src.order = clonedSignalData.dest.order;
+              // clonedSignalData.dest.order = temp;
+
+              console.log("after swap Clonned", (JSON.parse(JSON.stringify(clonedSignalData))));
 
               // Capture
               trail.captureWithImage(clonedSignalData, matrixChart.toImageURL());
