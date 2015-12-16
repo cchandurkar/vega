@@ -37,6 +37,11 @@
           "type": "formula",
           "field": "order",
           "expr": "if(dragging && datum._id === src._id, destOrder, datum.order)"
+        },
+        {
+          "type": "formula",
+          "field": "order",
+          "expr": "if(fixOrder != null, fixOrder[datum._id], datum.order)"
         }
 
       ]
