@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Vega Demos</title>
+    <script type="text/javascript" src="../d3.min.js"></script>
+    <script type="text/javascript" src="../vega.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script type="text/javascript" src="http://cchandurkar.github.io/trails/trails.min.js"></script>
+    <link rel="stylesheet" href="http://cchandurkar.github.io/trails/trails.css" media="screen" charset="utf-8">
+  </head>
+  <body>
+    <div id="chart"></div>
+    <div id="controls"></div>
+    <script type="text/javascript">
+    function parse(spec) {
+      vg.parse.spec(spec, function(chart) {
+
+        // Create Chart
+        var crossfilterChart = chart({el:"#chart"}).update();
+
+        // Create trail
+        var trail = trails.create()
+                  .attr('name', 'crossfilter')
+                  .addControls()
+                  .renderTo("#controls");
+
+        // Load Trail
+        trail.listen('onSnapshotChanged', function(snapshotData){
+          Object.keys(snapshotData).forEach(function(signal){
+            crossfilterChart.signal(signal, snapshotData[signal]);
+          });
+          crossfilterChart.update();
+        });
+
+        // Logs
+        console.log("chart", crossfilterChart);
+        console.log("signals", crossfilterChart.signal());
+
+        // var dragSignals = ['dayEnd_vgGATEKEEPER', 'delayEnd_vgGATEKEEPER', 'distEnd_vgGATEKEEPER', 'timesEnd_vgGATEKEEPER'];
+        // dragSignals.forEach(function(signal){
+        //   crossfilterChart.onSignal(signal, function(name, value){
+        //
+        //     // Capture only when drag is stopped
+        //     if(value === true) return;
+        //
+        //     // Hold Data
+        //     var data = {};
+        //
+        //     // Get all Signal Values
+        //     Object.keys(crossfilterChart.signal()).forEach(function(crossSignal){
+        //       data[crossSignal] = (JSON.parse(JSON.stringify(crossfilterChart.signal(crossSignal))));
+        //     });
+        //
+        //     console.log("data", data);
+        //
+        //     // // Re-clone
+        //     // data = ;
+        //
+        //     // Capture
+        //     trail.captureWithImage(data, crossfilterChart.toImageURL());
+        //
+        //   });
+        // });
+
+        crossfilterChart.onSignal('dayEnd_vgGATEKEEPER', function(name, value){
+          if(value === false){
+            trail.captureWithImage({
+              dayStart: crossfilterChart.signal('dayStart'),
+              dayEnd: crossfilterChart.signal('dayEnd'),
+              minDay: crossfilterChart.signal('minDay'),
+              maxDay: crossfilterChart.signal('maxDay')
+            }, crossfilterChart.toImageURL());
+          }
+        });
+
+        crossfilterChart.onSignal('delayEnd_vgGATEKEEPER', function(name, value){
+          if(value === false){
+            trail.captureWithImage({
+              delayStart: crossfilterChart.signal('delayStart'),
+              delayEnd: crossfilterChart.signal('delayEnd'),
+              minDelay: crossfilterChart.signal('minDelay'),
+              maxDelay: crossfilterChart.signal('maxDelay')
+            }, crossfilterChart.toImageURL());
+          }
+        });
+
+        crossfilterChart.onSignal('distEnd_vgGATEKEEPER', function(name, value){
+          if(value === false){
+            trail.captureWithImage({
+              distStart: crossfilterChart.signal('distStart'),
+              distEnd: crossfilterChart.signal('distEnd'),
+              minDist: crossfilterChart.signal('minDist'),
+              maxDist: crossfilterChart.signal('maxDist')
+            }, crossfilterChart.toImageURL());
+          }
+        });
+
+        crossfilterChart.onSignal('timesEnd_vgGATEKEEPER', function(name, value){
+          if(value === false){
+            trail.captureWithImage({
+              timesStart: crossfilterChart.signal('timesStart'),
+              timesEnd: crossfilterChart.signal('timesEnd'),
+              minTime: crossfilterChart.signal('minTime'),
+              maxTime: crossfilterChart.signal('maxTime')
+            }, crossfilterChart.toImageURL());
+          }
+        });
+
+
+      });
+    }
+    parse("./specs/crossfilter.json");
+    </script>
+  </body>
+</html>
