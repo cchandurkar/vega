@@ -15,6 +15,11 @@
         },
         {
           "type": "formula",
+          "field": "provenance",
+          "expr": "if(dragging, fixOrder[1], [])"
+        },
+        {
+          "type": "formula",
           "field": "order",
           "expr": "if(dragging && src.order < dest.order, if(datum.order > src.order && datum.order < dest.order, datum.order - 1, datum.order), datum.order)"
         },
@@ -33,6 +38,7 @@
           "field": "order",
           "expr": "if(dragging && datum._id === src._id, destOrder, datum.order)"
         }
+
       ]
     },
     {
@@ -72,7 +78,11 @@
       ]
     },
     {"name": "destOrder", "expr": "dest.order"},
-    {"name": "dragging",  "expr": "src._id && dest._id"}
+    {"name": "dragging",  "expr": "src._id && dest._id"},
+    {
+      "name": "fixOrder",
+      "init": null
+    }
   ],
 
   "predicates": [
